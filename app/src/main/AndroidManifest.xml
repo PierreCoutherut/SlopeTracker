@@ -10,16 +10,17 @@
         android:label="SlopeTracker"
         android:roundIcon="@drawable/ic_icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".SessionTermine"></activity>
-        <activity android:name=".record" />
-        <activity android:name=".Accueil">
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Accueil" />
+        <activity android:name=".SessionTermine"></activity>
+        <activity android:name=".record" />
     </application>
 
 </manifest>

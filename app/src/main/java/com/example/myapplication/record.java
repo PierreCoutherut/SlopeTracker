@@ -32,9 +32,7 @@ import java.util.TimerTask;
 
 public class record extends AppCompatActivity {
     //Déclaration
-    final Intent SessionTermine = new Intent(this, SessionTermine.class);
     DatabaseHelper db = new DatabaseHelper(this);
-    final Intent record = new Intent(this, record.class);
 
     private Button playButton;
     private Button pauseButton;
@@ -54,6 +52,8 @@ public class record extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
         final Chronometer chronometer = (Chronometer) findViewById(R.id.simpleChronometer); // initiate a chronometer
+        final Intent SessionTermine = new Intent(this, SessionTermine.class);
+        final Intent record = new Intent(this, record.class);
 
         //Affectation
         playButton = findViewById(R.id.playButton);
