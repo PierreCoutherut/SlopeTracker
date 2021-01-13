@@ -105,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return points;
     }
 
-    public int updateTransaction(Point point, String tableName) {
+    public int updatePoint(Point point, String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
