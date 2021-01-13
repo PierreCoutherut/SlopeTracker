@@ -9,7 +9,7 @@ public class Point {
     private int vitesse;
     private String tempPoint;
 
-    public static final String TABLE_NAME = "Point";
+    public static final String TABLE_NAME_POINTS = "Points";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_LATITUDE = "latitude";
     public static final String COLUMN_LONGITUDE = "longitude";
@@ -20,15 +20,15 @@ public class Point {
 
     //Création de la table
     // Create table SQL query
-    public static final String CREATE_TABLE =
-            "CREATE TABLE IF NOT EXISTS "+ TABLE_NAME +"("
+    public static final String CREATE_TABLE_POINTS =
+            "CREATE TABLE "+ TABLE_NAME_POINTS +"( "
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_LATITUDE + " REAL,"
-                    + COLUMN_LONGITUDE + "REAL,"
-                    + COLUMN_ALTITUDE + "INTEGER,"
-                    + COLUMN_VITESSE + "INTEGER,"
-                    + COLUMN_TEMPPOINT + "TEXT"
-                    + ")";
+                    + COLUMN_LONGITUDE + " REAL,"
+                    + COLUMN_ALTITUDE + " INTEGER,"
+                    + COLUMN_VITESSE + " INTEGER,"
+                    + COLUMN_TEMPPOINT + " TEXT"
+                    + " )";
 
     //Constructeur
 
@@ -37,7 +37,6 @@ public class Point {
     }
 
     public Point(int id, double latitude, double longitude, int altitude, int vitesse, String tempPoint){
-        super();
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
