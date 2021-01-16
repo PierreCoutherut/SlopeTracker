@@ -26,13 +26,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Point.CREATE_TABLE_POINTS);
-        //db.execSQL(Transaction.CREATE_TABLE_R);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + Point.TABLE_NAME_POINTS);
-        //db.execSQL("DROP TABLE IF EXISTS "+Transaction.TABLE_NAME_R);
         onCreate(db);
 
     }

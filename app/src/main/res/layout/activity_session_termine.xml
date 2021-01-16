@@ -6,4 +6,59 @@
     android:layout_height="match_parent"
     tools:context=".SessionTermine">
 
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="91dp"
+        android:layout_marginLeft="91dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginEnd="110dp"
+        android:layout_marginRight="110dp"
+        android:layout_marginBottom="546dp"
+        android:ems="10"
+        android:hint="Titre de la session"
+        android:inputType="textPersonName"
+        android:shadowColor="#43AEF6"
+        android:textColorHighlight="@color/gradientColor2"
+        android:textColorLink="@color/gradientColor2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/RetourAccueilButton"
+        android:layout_width="105dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="297dp"
+        android:layout_marginBottom="170dp"
+        android:background="@drawable/ic_round_home_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mapButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/mapButton"
+        android:layout_width="110dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="82dp"
+        android:layout_marginLeft="82dp"
+        android:layout_marginTop="297dp"
+        android:layout_marginEnd="74dp"
+        android:layout_marginRight="74dp"
+        android:layout_marginBottom="158dp"
+        android:background="@drawable/ic_round_location_on_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/RetourAccueilButton"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
