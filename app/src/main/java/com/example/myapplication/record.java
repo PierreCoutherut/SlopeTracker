@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -156,9 +158,12 @@ public class record extends AppCompatActivity {
 
                     Toast toast = Toast.makeText(record.this, "vous êtes ici : "+ latitude +" / "+ longitude + " | Alitude : "+ altitude +" | Vitesse : "+ vitesse + " | Temps : " + temps, Toast.LENGTH_SHORT);
                     toast.show();
-
+                    Log.i("GPS","Tracking..");
                    // Point point = new Point(idPoint,latitude,longitude,altitude,vitesse,temps);
+                   // SharedPreferences pref = getSharedPreferences("profils", MODE_PRIVATE);
+                  //  SharedPreferences.Editor editor = pref.edit();
 
+                  //  editor.putString("session","1");
                     db.insertPoint(latitude, longitude, altitude, vitesse, temps);
 
                 }
