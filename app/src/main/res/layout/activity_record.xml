@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gradientColor1"
-    tools:context=".record">
+    tools:context=".Record">
 
     <Chronometer
         android:id="@+id/simpleChronometer"

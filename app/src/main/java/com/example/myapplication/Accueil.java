@@ -14,7 +14,7 @@ public class Accueil extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
-        final Intent record = new Intent(this, record.class);
+        final Intent record = new Intent(this, Record.class);
 
         StartButton = findViewById(R.id.StartButton);
 

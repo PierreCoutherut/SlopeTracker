@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class record extends AppCompatActivity {
+public class Record extends AppCompatActivity {
     //Déclaration
     DatabaseHelper db = new DatabaseHelper(this);
 
@@ -44,8 +46,9 @@ public class record extends AppCompatActivity {
     private Timer mTimer1;
     private TimerTask mTt1;
     private int idPoint;
+    private int idSessions;
     private Handler mTimerHandler = new Handler();
-
+    //test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -53,19 +56,37 @@ public class record extends AppCompatActivity {
         setContentView(R.layout.activity_record);
         final Chronometer chronometer = (Chronometer) findViewById(R.id.simpleChronometer); // initiate a chronometer
         final Intent SessionTermine = new Intent(this, SessionTermine.class);
-        final Intent record = new Intent(this, record.class);
+        final Intent record = new Intent(this, Record.class);
 
         //Affectation
         playButton = findViewById(R.id.playButton);
         pauseButton = findViewById(R.id.pauseButton);
         temoinBouton = 0;
         compteur = 0;
-        idPoint = 0;
         temoinBouton = 1;
+        idPoint = 0;
+        //Initialisation du numéro de la session
+        SharedPreferences pref = getSharedPreferences("Sessions", MODE_PRIVATE);
+
+        idSessions = pref.getInt("idSessions",0);
+        SharedPreferences.Editor editor = pref.edit();
+
+        if(idSessions != 0){
+            editor.putInt("idSessions", idSessions ++);
+        }else{
+            editor.putInt("idSessions", 1);
+        }
+        editor.apply();
+        SharedPreferences pref2 = getSharedPreferences("Sessions", MODE_PRIVATE);
+
+        idSessions = pref2.getInt("idSessions",0);
+
+
+        //  editor.putString("session","1");
 
         //Démarrage de la localisation
         playButton.setBackgroundResource(R.drawable.ic_pauseicon);
-        Toast toast = Toast.makeText(record.this, "Démarrage de la localisation", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(Record.this, "Démarrage de la localisation", Toast.LENGTH_SHORT);
         toast.show();
         démarrageLocalisation();
 
@@ -77,7 +98,7 @@ public class record extends AppCompatActivity {
                         if (temoinBouton == 0) {
                             temoinBouton = 1;
                             playButton.setBackgroundResource(R.drawable.ic_pauseicon);
-                            Toast toast = Toast.makeText(record.this, "redémarrage de la localisation", Toast.LENGTH_SHORT);
+                            Toast toast = Toast.makeText(Record.this, "redémarrage de la localisation", Toast.LENGTH_SHORT);
                             toast.show();
 
                             démarrageLocalisation();
@@ -92,10 +113,11 @@ public class record extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         ArretLocalisation(chronometer);
-                        Toast toast = Toast.makeText(record.this,"Arret", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(Record.this,"Arret", Toast.LENGTH_SHORT);
                         toast.show();
                         Chronometer chronometer = (Chronometer) findViewById(R.id.simpleChronometer); // initiate a chronometer
                         startActivity(SessionTermine);
+                        finish();
                     }
                 }
         );
@@ -119,7 +141,7 @@ public class record extends AppCompatActivity {
                     public void run() {
                         androidUpdateLocation();
                         idPoint ++;
-                        Toast toast = Toast.makeText(record.this, "actualisé", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(Record.this, "actualisé", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 });
@@ -131,7 +153,7 @@ public class record extends AppCompatActivity {
 
     public LocationListener androidLocationListener = new LocationListener() {
         public void onLocationChanged(Location loc) {
-            Toast toast = Toast.makeText(record.this, "Vous êtes ici : "+loc.getLatitude()+" / "+loc.getLongitude(), Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(Record.this, "Vous êtes ici : "+loc.getLatitude()+" / "+loc.getLongitude(), Toast.LENGTH_SHORT);
             toast.show();
         }
         public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -139,27 +161,32 @@ public class record extends AppCompatActivity {
         public void onProviderDisabled(String provider) {}
     };
     public void androidUpdateLocation(){
-        if (ActivityCompat.checkSelfPermission(record.this, Manifest.permission.ACCESS_FINE_LOCATION
+        if (ActivityCompat.checkSelfPermission(Record.this, Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(record.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_UPDATE_LOCATION);
+            ActivityCompat.requestPermissions(Record.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_UPDATE_LOCATION);
         } else {
             androidLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
             androidLocationListener = new LocationListener() {
                 public void onLocationChanged(Location loc) {
                     Chronometer chronometer = (Chronometer) findViewById(R.id.simpleChronometer);
                     String temps = chronometer.getText().toString();
-                //  double temps = Double.valueOf(tempstring);
+                    //  double temps = Double.valueOf(tempstring);
                     int altitude = (int) loc.getAltitude();
                     double latitude = loc.getLatitude();
                     double longitude = loc.getLongitude();
                     int vitesse = (int) Math.round(loc.getSpeed() * 3.6);
 
-                    Toast toast = Toast.makeText(record.this, "vous êtes ici : "+ latitude +" / "+ longitude + " | Alitude : "+ altitude +" | Vitesse : "+ vitesse + " | Temps : " + temps, Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(Record.this, "vous êtes ici : "+ latitude +" / "+ longitude + " | Alitude : "+ altitude +" | Vitesse : "+ vitesse + " | Temps : " + temps, Toast.LENGTH_SHORT);
                     toast.show();
+                    Log.i("GPS","Tracking..");
 
-                   // Point point = new Point(idPoint,latitude,longitude,altitude,vitesse,temps);
+                    // Point point = new Point(idPoint,latitude,longitude,altitude,vitesse,temps);
+                    // SharedPreferences pref = getSharedPreferences("profils", MODE_PRIVATE);
+                    //  SharedPreferences.Editor editor = pref.edit();
 
-                    db.insertPoint(latitude, longitude, altitude, vitesse, temps);
+                    //  editor.putString("session","1");
+
+                    db.insertPoint(latitude, longitude, altitude, vitesse, temps,idSessions);
 
                 }
                 public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -182,7 +209,7 @@ public class record extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
-                    Toast toast = Toast.makeText(record.this, "Permission refusée.", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(Record.this, "Permission refusée.", Toast.LENGTH_LONG);
                     toast.show();
                 }
                 return;
@@ -192,6 +219,7 @@ public class record extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.i("GPS","Tracking terminé");
         if(androidLocationListener!=null) {
             if (androidLocationManager == null) {
                 androidLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
