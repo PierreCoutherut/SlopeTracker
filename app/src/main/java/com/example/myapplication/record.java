@@ -48,7 +48,7 @@ public class record extends AppCompatActivity {
     private int idPoint;
     private int idSessions;
     private Handler mTimerHandler = new Handler();
-
+//test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
