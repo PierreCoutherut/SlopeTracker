@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -44,8 +46,9 @@ public class record extends AppCompatActivity {
     private Timer mTimer1;
     private TimerTask mTt1;
     private int idPoint;
+    private int idSessions;
     private Handler mTimerHandler = new Handler();
-
+//test
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -60,8 +63,20 @@ public class record extends AppCompatActivity {
         pauseButton = findViewById(R.id.pauseButton);
         temoinBouton = 0;
         compteur = 0;
-        idPoint = 0;
         temoinBouton = 1;
+        idPoint = 0;
+        //Initialisation du numéro de la session
+        SharedPreferences pref = getSharedPreferences("Sessions", MODE_PRIVATE);
+
+        idSessions = pref.getInt("idSessions",0);
+        if(idSessions != 0){
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putInt("idSessions", idSessions ++);
+        }
+
+
+
+        //  editor.putString("session","1");
 
         //Démarrage de la localisation
         playButton.setBackgroundResource(R.drawable.ic_pauseicon);
@@ -156,9 +171,13 @@ public class record extends AppCompatActivity {
 
                     Toast toast = Toast.makeText(record.this, "vous êtes ici : "+ latitude +" / "+ longitude + " | Alitude : "+ altitude +" | Vitesse : "+ vitesse + " | Temps : " + temps, Toast.LENGTH_SHORT);
                     toast.show();
+                    Log.i("GPS","Tracking..");
 
                    // Point point = new Point(idPoint,latitude,longitude,altitude,vitesse,temps);
+                   // SharedPreferences pref = getSharedPreferences("profils", MODE_PRIVATE);
+                  //  SharedPreferences.Editor editor = pref.edit();
 
+                  //  editor.putString("session","1");
                     db.insertPoint(latitude, longitude, altitude, vitesse, temps);
 
                 }

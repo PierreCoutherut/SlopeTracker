@@ -8,6 +8,7 @@ public class Point {
     private int altitude;
     private int vitesse;
     private String tempPoint;
+    private int idSession;
 
     public static final String TABLE_NAME_POINTS = "Points";
     public static final String COLUMN_ID = "id";
@@ -16,6 +17,8 @@ public class Point {
     public static final String COLUMN_ALTITUDE = "altitude";
     public static final String COLUMN_VITESSE = "vitesse";
     public static final String COLUMN_TEMPPOINT = "tempPoint";
+    public static final String COLUMN_IDSESSION = "idSession";
+
 
 
     //Création de la table
@@ -27,7 +30,8 @@ public class Point {
                     + COLUMN_LONGITUDE + " REAL,"
                     + COLUMN_ALTITUDE + " INTEGER,"
                     + COLUMN_VITESSE + " INTEGER,"
-                    + COLUMN_TEMPPOINT + " TEXT"
+                    + COLUMN_TEMPPOINT + " TEXT,"
+                    +COLUMN_IDSESSION + " INTEGER"
                     + " )";
 
     //Constructeur
@@ -36,13 +40,14 @@ public class Point {
 
     }
 
-    public Point(int id, double latitude, double longitude, int altitude, int vitesse, String tempPoint){
+    public Point(int id, double latitude, double longitude, int altitude, int vitesse, String tempPoint, int idSession){
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
         this.vitesse = vitesse;
         this.tempPoint = tempPoint;
+        this.idSession = idSession;
     }
 
     //Getter
@@ -68,6 +73,7 @@ public class Point {
 
     public String getTempPoint(){ return  tempPoint;}
 
+    public int getIdSession(){return  idSession;}
 
     //Setter
     public void setId(int id){
@@ -92,4 +98,6 @@ public class Point {
     }
 
     public void setTempPoint(String tempPoint){this.tempPoint = tempPoint;}
+
+    public void setIdSession(int idSession){this.idSession = idSession;}
 }
