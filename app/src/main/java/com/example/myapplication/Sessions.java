@@ -1,7 +1,7 @@
 package com.example.myapplication;
 
 import java.util.Date;
-
+//Classe Sessions
 public class Sessions {
     private int id;
     private String titre;
