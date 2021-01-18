@@ -52,7 +52,6 @@ public class Inscription extends AppCompatActivity {
                     Toast.makeText(Inscription.this,"Le mot de passe n'est pas identique",Toast.LENGTH_SHORT).show();
                 }else{
                     startActivity(accueil);
-
                 }
             }
         });
