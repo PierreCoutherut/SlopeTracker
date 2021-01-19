@@ -13,7 +13,8 @@
         android:roundIcon="@drawable/ic_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Inscription"></activity>
+        <activity android:name=".Connexion"></activity>
+        <activity android:name=".Inscription" />
         <activity android:name=".Bienvenue" />
 
         <meta-data

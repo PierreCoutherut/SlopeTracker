@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 public class Inscription extends AppCompatActivity {
 
+    DatabaseHelper db = new DatabaseHelper(this);
+
     private EditText login;
     private EditText mdp;
     private EditText mdp2;
@@ -35,7 +37,7 @@ public class Inscription extends AppCompatActivity {
         mdp = findViewById(R.id.editTextPassword1);
         mdp2 = findViewById(R.id.editTextPassword2);
 
-        final Intent accueil = new Intent(this, Accueil.class);
+        final Intent connexion = new Intent(this, Connexion.class);
 
         valider.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +53,8 @@ public class Inscription extends AppCompatActivity {
                 }else if(!myMdp.equals(myMdp2)){
                     Toast.makeText(Inscription.this,"Le mot de passe n'est pas identique",Toast.LENGTH_SHORT).show();
                 }else{
-                    startActivity(accueil);
+                    db.insertSkieurs(myLogin,myMdp,myMail);
+                    startActivity(connexion);
                 }
             }
         });

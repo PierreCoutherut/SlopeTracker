@@ -10,9 +10,10 @@ public class Sessions {
     private int vitessMax;
     private double distanceParcourue;
     private double temps;
+    private int idSkieur;
 
 
-    public static final String TABLE_NAME = "Session";
+    public static final String TABLE_NAME_SESSION = "Session";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_TITRE = "titre";
     public static final String COLUMN_DATE = "date";
@@ -20,22 +21,24 @@ public class Sessions {
     public static final String COlUMN_VITESSE_MAX = "vitesMax";
     public static final String COLUMN_DISTANCE_PARCOURUE = "distanceParcourue";
     public static final String COLUMN_TEMPS = "temps";
+    public static final String COLUMN_ID_SKIEUR ="idSkieur";
 
 
     //Création de la table
     // Create table SQL query
     public static final String CREATE_TABLE_SESSION=
-            "CREATE TABLE "+ TABLE_NAME +"( "
-                    + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            "CREATE TABLE "+ TABLE_NAME_SESSION +"( "
+                    + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_TITRE + " REAL,"
                     + COLUMN_DATE + " REAL,"
                     + COLUMN_ALTITUDE_MAX + " REAL,"
                     + COlUMN_VITESSE_MAX + " REAL,"
                     + COLUMN_DISTANCE_PARCOURUE + " INTEGER,"
-                    + COLUMN_TEMPS + " INTEGER"
+                    + COLUMN_TEMPS + " INTEGER,"
+                    + COLUMN_ID_SKIEUR + " INTEGER"
                     + ")";
 
-    public Sessions(int id, String titre, String date, int altitudeMax, int vitessMax, double distanceParcourue, double temps) {
+    public Sessions(int id, String titre, String date, int altitudeMax, int vitessMax, double distanceParcourue, double temps, int idSkieur) {
         this.id = id;
         this.titre = titre;
         this.date = date;
@@ -43,7 +46,10 @@ public class Sessions {
         this.vitessMax = vitessMax;
         this.distanceParcourue = distanceParcourue;
         this.temps = temps;
+        this.idSkieur = idSkieur;
     }
+
+    public Sessions(){}
 
     public int getId() {
         return id;
@@ -90,5 +96,13 @@ public class Sessions {
 
     public void setVitessMax(int vitessMax) {
         this.vitessMax = vitessMax;
+    }
+
+    public int getIdSkieur() {
+        return idSkieur;
+    }
+
+    public void setIdSkieur(int idSkieur) {
+        this.idSkieur = idSkieur;
     }
 }

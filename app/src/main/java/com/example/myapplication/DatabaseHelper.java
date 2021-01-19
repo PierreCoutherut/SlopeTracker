@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "tracker_db";
 
     public DatabaseHelper(@Nullable Context context) {
@@ -27,12 +27,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Point.CREATE_TABLE_POINTS);
         db.execSQL(Sessions.CREATE_TABLE_SESSION);
+        db.execSQL(Skieurs.CREATE_TABLE_SKIEURS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + Point.TABLE_NAME_POINTS);
-        db.execSQL("DROP TABLE IF EXISTS " + Sessions.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + Sessions.TABLE_NAME_SESSION);
+        db.execSQL("DROP TABLE IF EXISTS " + Skieurs.TABLE_NAME_SKIEURS);
         onCreate(db);
 
     }
@@ -65,10 +67,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Sessions.COLUMN_TEMPS, temps);
 
 
-        long id = db.insert(Sessions.TABLE_NAME, null, values);
+        long id = db.insert(Sessions.TABLE_NAME_SESSION, null, values);
         db.close();
         return id;
     }
+
+    public long insertSkieurs(String login, String password, String mail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Skieurs.COLUMN_LOGIN, login);
+        values.put(Skieurs.COLUMN_PASSWORD, password);
+        values.put(Skieurs.COLUMN_MAIL, mail);
+
+
+        long id = db.insert(Skieurs.TABLE_NAME_SKIEURS, null, values);
+        db.close();
+        return id;
+    }
+
+
+    public void deleteSkieur(Skieurs skieur) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(Skieurs.TABLE_NAME_SKIEURS, Skieurs.COLUMN_ID + " = ?", new String[]{String.valueOf(skieur.getId())});
+        db.close();
+    }
+
 
     public void deletePoint(Point point) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -78,8 +102,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void deleteSessions(Sessions sessions){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(sessions.TABLE_NAME, Sessions.COLUMN_ID + " = ?", new String[]{String.valueOf(sessions.getId())});
+        db.delete(sessions.TABLE_NAME_SESSION, Sessions.COLUMN_ID + " = ?", new String[]{String.valueOf(sessions.getId())});
         db.close();
+    }
+
+    //Récupère les sessions d'un skieur
+    public List<Sessions> getSessionsWhereIdSkieur( int idSkieur) {
+        List<Sessions> sessions = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + Sessions.TABLE_NAME_SESSION + " ORDER BY " + Sessions.COLUMN_ID + " DESC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Sessions session = new Sessions();
+                session.setId(cursor.getInt(cursor.getColumnIndex(Sessions.COLUMN_ID)));
+                session.setDate(cursor.getString(cursor.getColumnIndex(Sessions.COLUMN_DATE)));
+                session.setAltitudeMax(cursor.getInt(cursor.getColumnIndex(Sessions.COLUMN_ALTITUDE_MAX)));
+                session.setTemps(cursor.getInt(cursor.getColumnIndex(Sessions.COLUMN_TEMPS)));
+                session.setDistanceParcourue(cursor.getDouble(cursor.getColumnIndex(Sessions.COLUMN_DISTANCE_PARCOURUE)));
+                session.setTitre(cursor.getString(cursor.getColumnIndex(Sessions.COLUMN_TITRE)));
+                session.setVitessMax(cursor.getInt(cursor.getColumnIndex(Sessions.COlUMN_VITESSE_MAX)));
+                session.setIdSkieur(cursor.getInt(cursor.getColumnIndex(Sessions.COLUMN_ID_SKIEUR)));
+                sessions.add(session);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+
+        return sessions;
     }
 
 
@@ -131,11 +182,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return point;
     }
 
+    public boolean hasObjectSkieur(String login, String mdp){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT * FROM "+Skieurs.TABLE_NAME_SKIEURS+ " WHERE "+ Skieurs.COLUMN_LOGIN + " = '"+login+ "' AND "+ Skieurs.COLUMN_PASSWORD+" = '"+mdp+"'";
+        Cursor cursor = db.rawQuery(selectQuery,null);
+
+        if (cursor.moveToFirst()){
+            return true;
+        }
+        if (cursor!=null) {
+            cursor.close();
+        }
+        db.close();
+        return false;
+    }
+
+    public Skieurs getSkieur(long id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(Skieurs.TABLE_NAME_SKIEURS,
+                new String[]{Skieurs.COLUMN_ID, Skieurs.COLUMN_LOGIN, Skieurs.COLUMN_PASSWORD,Skieurs.COLUMN_MAIL},
+                Skieurs.COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Skieurs skieurs = new Skieurs(
+                cursor.getInt(cursor.getColumnIndex(Skieurs.COLUMN_ID)),
+                cursor.getString(cursor.getColumnIndex(Skieurs.COLUMN_LOGIN)),
+                cursor.getString(cursor.getColumnIndex(Skieurs.COLUMN_PASSWORD)),
+                cursor.getString(cursor.getColumnIndex(Skieurs.COLUMN_MAIL))
+        );
+
+        cursor.close();
+        return skieurs;
+    }
+
 
     public Sessions getSessions(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(Sessions.TABLE_NAME,
+        Cursor cursor = db.query(Sessions.TABLE_NAME_SESSION,
                 new String[]{Sessions.COLUMN_ID, Sessions.COLUMN_TITRE, Sessions.COLUMN_DATE,Sessions.COLUMN_ALTITUDE_MAX, Sessions.COlUMN_VITESSE_MAX,Sessions.COLUMN_DISTANCE_PARCOURUE, Sessions.COLUMN_TEMPS },
                 Sessions.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
@@ -149,7 +236,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 cursor.getInt(cursor.getColumnIndex(Sessions.COLUMN_ALTITUDE_MAX)),
                 cursor.getInt(cursor.getColumnIndex(Sessions.COlUMN_VITESSE_MAX)),
                 cursor.getDouble(cursor.getColumnIndex(Sessions.COLUMN_DISTANCE_PARCOURUE)),
-                cursor.getDouble(cursor.getColumnIndex(Sessions.COLUMN_TEMPS))
+                cursor.getDouble(cursor.getColumnIndex(Sessions.COLUMN_TEMPS)),
+                cursor.getInt(cursor.getColumnIndex(Sessions.COLUMN_ID_SKIEUR))
         );
 
         cursor.close();
